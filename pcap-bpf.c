@@ -490,7 +490,7 @@ bpf_open(pcap_t *p)
 		fd = open(device, O_RDWR);
 		if (fd == -1 && errno == EACCES)
 			fd = open(device, O_RDONLY);
-	} while (fd < 0 && errno == EBUSY);
+	} while (fd < 0 && errno == EBUSY && n < 1000);
 
 	/*
 	 * XXX better message for all minors used
