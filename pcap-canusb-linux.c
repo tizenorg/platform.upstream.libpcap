@@ -36,6 +36,7 @@
 #include "config.h"
 #endif
 
+#include <pthread.h>
 #include <libusb-1.0/libusb.h>
 
 #include <stdlib.h>
@@ -289,8 +290,7 @@ static int canusb_startcapture(struct pcap_canusb* this)
 {
     int pipefd[2];
 
-    if (pipe(pipefd) == -1)
-        return -1;
+  if (pipe2(pipefd, O_CLOEXEC) == -1) return -1;
 
     this->rdpipe = pipefd[0];
     this->wrpipe = pipefd[1];

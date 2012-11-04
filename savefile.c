@@ -185,7 +185,7 @@ pcap_open_offline_with_tstamp_precision(const char *fname, u_int precision,
 	}
 	else {
 #if !defined(WIN32) && !defined(MSDOS)
-		fp = fopen(fname, "r");
+		fp = fopen(fname, "re");
 #else
 		fp = fopen(fname, "rb");
 #endif

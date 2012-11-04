@@ -506,7 +506,7 @@ get_if_description(const char *name)
 	 */
 	memset(&ifrdesc, 0, sizeof ifrdesc);
 	strlcpy(ifrdesc.ifr_name, name, sizeof ifrdesc.ifr_name);
-	s = socket(AF_INET, SOCK_DGRAM, 0);
+	s = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (s >= 0) {
 #ifdef __FreeBSD__
 		/*
@@ -894,7 +894,7 @@ pcap_lookupnet(device, netp, maskp, errbuf)
 		return 0;
 	}
 
-	fd = socket(AF_INET, SOCK_DGRAM, 0);
+	fd = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (fd < 0) {
 		(void)snprintf(errbuf, PCAP_ERRBUF_SIZE, "socket: %s",
 		    pcap_strerror(errno));

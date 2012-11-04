@@ -161,7 +161,7 @@ can_activate(pcap_t* handle)
 	handle->stats_op = can_stats_linux;
 
 	/* Create socket */
-	handle->fd = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	handle->fd = socket(PF_CAN, SOCK_RAW|SOCK_CLOEXEC, CAN_RAW);
 	if (handle->fd < 0)
 	{
 		snprintf(handle->errbuf, PCAP_ERRBUF_SIZE, "Can't create raw socket %d:%s",
@@ -235,7 +235,7 @@ can_read_linux(pcap_t *handle, int max_packets, pcap_handler callback, u_char *u
 
 	do
 	{
-		pkth.caplen = recvmsg(handle->fd, &msg, 0);
+		pkth.caplen = recvmsg(handle->fd, &msg, MSG_CMSG_CLOEXEC);
 		if (handle->break_loop)
 		{
 			handle->break_loop = 0;

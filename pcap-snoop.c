@@ -210,7 +210,7 @@ pcap_activate_snoop(pcap_t *p)
 	int snooplen;
 	struct ifreq ifr;
 
-	fd = socket(PF_RAW, SOCK_RAW, RAWPROTO_SNOOP);
+	fd = socket(PF_RAW, SOCK_RAW|SOCK_CLOEXEC, RAWPROTO_SNOOP);
 	if (fd < 0) {
 		snprintf(p->errbuf, PCAP_ERRBUF_SIZE, "snoop socket: %s",
 		    pcap_strerror(errno));
