@@ -100,7 +100,7 @@ pcap_findalldevs(pcap_if_t **alldevsp, char *errbuf)
 	 * Create a socket from which to fetch the list of interfaces,
 	 * and from which to fetch IPv4 information.
 	 */
-	fd4 = socket(AF_INET, SOCK_DGRAM, 0);
+	fd4 = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (fd4 < 0) {
 		(void)snprintf(errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));
@@ -110,7 +110,7 @@ pcap_findalldevs(pcap_if_t **alldevsp, char *errbuf)
 	/*
 	 * Create a socket from which to fetch IPv6 information.
 	 */
-	fd6 = socket(AF_INET6, SOCK_DGRAM, 0);
+	fd6 = socket(AF_INET6, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (fd6 < 0) {
 		(void)snprintf(errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));

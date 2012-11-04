@@ -189,7 +189,7 @@ pcap_open_offline(const char *fname, char *errbuf)
 	}
 	else {
 #if !defined(WIN32) && !defined(MSDOS)
-		fp = fopen(fname, "r");
+		fp = fopen(fname, "re");
 #else
 		fp = fopen(fname, "rb");
 #endif

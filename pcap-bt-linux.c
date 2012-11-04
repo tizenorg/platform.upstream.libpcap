@@ -79,7 +79,7 @@ bt_platform_finddevs(pcap_if_t **alldevsp, char *err_str)
 	int i, sock;
 	int ret = 0;
 	
-	sock  = socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI);
+	sock  = socket(AF_BLUETOOTH, SOCK_RAW|SOCK_CLOEXEC, BTPROTO_HCI);
 	if (sock < 0)
 	{
 		/* if bluetooth is not supported this this is not fatal*/ 
@@ -181,7 +181,7 @@ bt_activate(pcap_t* handle)
 	handle->md.ifindex = dev_id;
 	
 	/* Create HCI socket */
-	handle->fd = socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI);
+	handle->fd = socket(AF_BLUETOOTH, SOCK_RAW|SOCK_CLOEXEC, BTPROTO_HCI);
 	if (handle->fd < 0) {
 		snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,
 		    "Can't create raw socket: %s", strerror(errno));
@@ -282,7 +282,7 @@ bt_read_linux(pcap_t *handle, int max_packets, pcap_handler callback, u_char *us
 
 	/* ignore interrupt system call error */
 	do {
-		ret = recvmsg(handle->fd, &msg, 0);
+		ret = recvmsg(handle->fd, &msg, MSG_CMSG_CLOEXEC);
 		if (handle->break_loop)
 		{
 			handle->break_loop = 0;

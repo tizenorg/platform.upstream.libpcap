@@ -259,7 +259,7 @@ pcap_activate_nit(pcap_t *p)
 		p->snapshot = 96;
 
 	memset(p, 0, sizeof(*p));
-	p->fd = fd = socket(AF_NIT, SOCK_RAW, NITPROTO_RAW);
+	p->fd = fd = socket(AF_NIT, SOCK_RAW|SOCK_CLOEXEC, NITPROTO_RAW);
 	if (fd < 0) {
 		snprintf(p->errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));

@@ -440,7 +440,7 @@ pcap_ether_hostton(const char *name)
 	static int init = 0;
 
 	if (!init) {
-		fp = fopen(PCAP_ETHERS_FILE, "r");
+		fp = fopen(PCAP_ETHERS_FILE, "re");
 		++init;
 		if (fp == NULL)
 			return (NULL);

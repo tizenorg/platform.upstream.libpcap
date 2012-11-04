@@ -156,7 +156,7 @@ pcap_findalldevs(pcap_if_t **alldevsp, char *errbuf)
 	/*
 	 * Create a socket from which to fetch the list of interfaces.
 	 */
-	fd = socket(AF_INET, SOCK_DGRAM, 0);
+	fd = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (fd < 0) {
 		(void)snprintf(errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));

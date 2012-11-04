@@ -980,7 +980,7 @@ pcap_can_set_rfmon_linux(pcap_t *handle)
 	 * (We assume that if we have Wireless Extensions support
 	 * we also have PF_PACKET support.)
 	 */
-	sock_fd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+	sock_fd = socket(PF_PACKET, SOCK_RAW|SOCK_CLOEXEC, htons(ETH_P_ALL));
 	if (sock_fd == -1) {
 		(void)snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));
@@ -1508,7 +1508,7 @@ pcap_read_packet(pcap_t *handle, pcap_handler callback, u_char *userdata)
 		}
 
 #if defined(HAVE_PACKET_AUXDATA) && defined(HAVE_LINUX_TPACKET_AUXDATA_TP_VLAN_TCI)
-		packet_len = recvmsg(handle->fd, &msg, MSG_TRUNC);
+		packet_len = recvmsg(handle->fd, &msg, MSG_TRUNC|MSG_CMSG_CLOEXEC);
 #else /* defined(HAVE_PACKET_AUXDATA) && defined(HAVE_LINUX_TPACKET_AUXDATA_TP_VLAN_TCI) */
 		fromlen = sizeof(from);
 		packet_len = recvfrom(
@@ -1976,7 +1976,7 @@ scan_sys_class_net(pcap_if_t **devlistp, char *errbuf)
 	/*
 	 * Create a socket from which to fetch interface information.
 	 */
-	fd = socket(AF_INET, SOCK_DGRAM, 0);
+	fd = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (fd < 0) {
 		(void)snprintf(errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));
@@ -2122,7 +2122,7 @@ scan_proc_net_dev(pcap_if_t **devlistp, char *errbuf)
 	/*
 	 * Create a socket from which to fetch interface information.
 	 */
-	fd = socket(AF_INET, SOCK_DGRAM, 0);
+	fd = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
 	if (fd < 0) {
 		(void)snprintf(errbuf, PCAP_ERRBUF_SIZE,
 		    "socket: %s", pcap_strerror(errno));
@@ -2897,8 +2897,8 @@ activate_new(pcap_t *handle)
 	 * try a SOCK_RAW socket for the raw interface.
 	 */
 	sock_fd = is_any_device ?
-		socket(PF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL)) :
-		socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+		socket(PF_PACKET, SOCK_DGRAM|SOCK_CLOEXEC, htons(ETH_P_ALL)) :
+		socket(PF_PACKET, SOCK_RAW|SOCK_CLOEXEC, htons(ETH_P_ALL));
 
 	if (sock_fd == -1) {
 		if (errno == EINVAL || errno == EAFNOSUPPORT) {
@@ -3014,7 +3014,7 @@ activate_new(pcap_t *handle)
 					 "close: %s", pcap_strerror(errno));
 				return PCAP_ERROR;
 			}
-			sock_fd = socket(PF_PACKET, SOCK_DGRAM,
+			sock_fd = socket(PF_PACKET, SOCK_DGRAM|SOCK_CLOEXEC,
 			    htons(ETH_P_ALL));
 			if (sock_fd == -1) {
 				snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,
@@ -5040,7 +5040,7 @@ activate_old(pcap_t *handle)
 
 	/* Open the socket */
 
-	handle->fd = socket(PF_INET, SOCK_PACKET, htons(ETH_P_ALL));
+	handle->fd = socket(PF_INET, SOCK_PACKET|SOCK_CLOEXEC, htons(ETH_P_ALL));
 	if (handle->fd == -1) {
 		snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,
 			 "socket: %s", pcap_strerror(errno));

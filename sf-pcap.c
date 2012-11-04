@@ -550,7 +550,7 @@ pcap_dump_open(pcap_t *p, const char *fname)
 		fname = "standard output";
 	} else {
 #if !defined(WIN32) && !defined(MSDOS)
-		f = fopen(fname, "w");
+		f = fopen(fname, "we");
 #else
 		f = fopen(fname, "wb");
 #endif

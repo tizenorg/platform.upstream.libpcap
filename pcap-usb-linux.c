@@ -252,7 +252,7 @@ probe_devices(int bus)
 
 		snprintf(buf, sizeof(buf), "/dev/bus/usb/%03d/%s", bus, data->d_name);
 		
-		fd = open(buf, O_RDWR);
+		fd = open(buf, O_RDWR|O_CLOEXEC);
 		if (fd == -1)
 			continue;
 
@@ -323,7 +323,7 @@ usb_activate(pcap_t* handle)
 
 	/*now select the read method: try to open binary interface */
 	snprintf(full_path, USB_LINE_LEN, LINUX_USB_MON_DEV"%d", handle->md.ifindex);  
-	handle->fd = open(full_path, O_RDONLY, 0);
+	handle->fd = open(full_path, O_RDONLY|O_CLOEXEC, 0);
 	if (handle->fd >= 0)
 	{
 		if (handle->opt.rfmon) {
@@ -358,7 +358,7 @@ usb_activate(pcap_t* handle)
 	else {
 		/*Binary interface not available, try open text interface */
 		snprintf(full_path, USB_LINE_LEN, USB_TEXT_DIR"/%dt", handle->md.ifindex);  
-		handle->fd = open(full_path, O_RDONLY, 0);
+		handle->fd = open(full_path, O_RDONLY|O_CLOEXEC, 0);
 		if (handle->fd < 0)
 		{
 			if (errno == ENOENT)
@@ -368,7 +368,7 @@ usb_activate(pcap_t* handle)
 				 * the old location.
 				 */
 				snprintf(full_path, USB_LINE_LEN, USB_TEXT_DIR_OLD"/%dt", handle->md.ifindex);  
-				handle->fd = open(full_path, O_RDONLY, 0);
+				handle->fd = open(full_path, O_RDONLY|O_CLOEXEC, 0);
 			}
 			if (handle->fd < 0) {
 				/* no more fallback, give it up*/
@@ -634,7 +634,7 @@ usb_stats_linux(pcap_t *handle, struct pcap_stat *stats)
 	int fd;
 
 	snprintf(string, USB_LINE_LEN, USB_TEXT_DIR"/%ds", handle->md.ifindex);
-	fd = open(string, O_RDONLY, 0);
+	fd = open(string, O_RDONLY|O_CLOEXEC, 0);
 	if (fd < 0)
 	{
 		if (errno == ENOENT)
@@ -644,7 +644,7 @@ usb_stats_linux(pcap_t *handle, struct pcap_stat *stats)
 			 * location.
 			 */
 			snprintf(string, USB_LINE_LEN, USB_TEXT_DIR_OLD"/%ds", handle->md.ifindex);
-			fd = open(string, O_RDONLY, 0);
+			fd = open(string, O_RDONLY|O_CLOEXEC, 0);
 		}
 		if (fd < 0) {
 			snprintf(handle->errbuf, PCAP_ERRBUF_SIZE,
