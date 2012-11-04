@@ -7,11 +7,6 @@ Url:            http://www.tcpdump.org/
 Group:          System/Libraries
 Source:         %{name}-%{version}.tar.bz2
 Source2:        baselibs.conf
-Patch0:         libpcap-1.0.0-filter-fix.patch
-Patch1:         libpcap-1.0.0-pcap-bpf.patch
-Patch2:         libpcap-1.0.0-ppp.patch
-Patch3:         libpcap-1.0.0-s390.patch
-Patch4:         libpcap-ocloexec.patch
 BuildRequires:  automake
 BuildRequires:  bison
 BuildRequires:  flex
@@ -36,11 +31,6 @@ program yourself.
 
 %prep
 %setup -q
-%patch0
-%patch1
-%patch2
-%patch3
-%patch4
 
 %build
 pic="pic"
@@ -51,8 +41,7 @@ export CFLAGS="%{optflags} -f$pic" CXXFLAGS="%{optflags} -f$pic"
 make %{?_smp_mflags} all shared
 
 %install
-mkdir -p %{buildroot}%{_bindir}
-make DESTDIR=%{buildroot} install install-shared
+%make_install
 
 %docs_package
 
