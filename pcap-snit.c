@@ -316,9 +316,9 @@ pcap_activate_snit(pcap_t *p)
 	 * the device in question) can be indicated at open
 	 * time.
 	 */
-	p->fd = fd = open(dev, O_RDWR);
+	p->fd = fd = open(dev, O_RDWR|O_CLOEXEC);
 	if (fd < 0 && errno == EACCES)
-		p->fd = fd = open(dev, O_RDONLY);
+		p->fd = fd = open(dev, O_RDONLY|O_CLOEXEC);
 	if (fd < 0) {
 		snprintf(p->errbuf, PCAP_ERRBUF_SIZE, "%s: %s", dev,
 		    pcap_strerror(errno));

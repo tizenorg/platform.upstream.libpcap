@@ -324,7 +324,7 @@ static int open_with_IOP(unit_t  *u, int flag) {
 	u->serv_addr->sin_addr.s_addr	= inet_addr(ip);
 	u->serv_addr->sin_port			= htons(IOP_SNIFFER_PORT);
 
-	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if ((sockfd = socket(AF_INET, SOCK_STREAM|SOCK_CLOEXEC, 0)) < 0) {
 		fprintf(stderr, "pcap can't open a socket for connecting to IOP at %s\n", ip);
 		return 0;
 	}

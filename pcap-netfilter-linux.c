@@ -486,7 +486,7 @@ netfilter_activate(pcap_t* handle)
 	handle->stats_op = netfilter_stats_linux;
 
 	/* Create netlink socket */
-	handle->fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_NETFILTER);
+	handle->fd = socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_NETFILTER);
 	if (handle->fd < 0) {
 		snprintf(handle->errbuf, PCAP_ERRBUF_SIZE, "Can't create raw socket %d:%s", errno, pcap_strerror(errno));
 		return PCAP_ERROR;
@@ -633,7 +633,7 @@ netfilter_findalldevs(pcap_if_t **alldevsp, char *err_str)
 {
 	int sock;
 	
-	sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_NETFILTER);
+	sock = socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_NETFILTER);
 	if (sock < 0) {
 		/* if netlink is not supported this is not fatal */
 		if (errno == EAFNOSUPPORT || errno == EPROTONOSUPPORT)
