@@ -2437,8 +2437,30 @@ pcap_setfilter_linux_common(pcap_t *handle, struct bpf_program *filter,
 	if (can_filter_in_kernel) {
 		if ((err = set_kernel_filter(handle, &fcode)) == 0)
 		{
+		        char buf[1024];
+			int oldflags;
+			int ret;
+			unsigned int received = 0, rec_len = 0;
+			socklen_t optlen = sizeof(rec_len);
 			/* Installation succeded - using kernel filter. */
 			handle->md.use_bpf = 1;
+
+			oldflags = fcntl(handle->fd, F_GETFL, 0);
+			oldflags |= O_NONBLOCK;
+			fcntl(handle->fd, F_SETFL, oldflags);
+			getsockopt(handle->fd, SOL_SOCKET, SO_RCVBUF,
+				   (char *)&rec_len, &optlen);
+
+                        /* now read all packets received until now */
+			while((ret = read(handle->fd, buf, 1024)) > 0
+			      && received < rec_len) {
+			    received += ret;
+			}
+
+			if(oldflags > 0) {
+			    oldflags &= ~O_NONBLOCK;
+			    fcntl(handle->fd, F_SETFL, oldflags);
+			}
 		}
 		else if (err == -1)	/* Non-fatal error */
 		{
