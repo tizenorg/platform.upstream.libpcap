@@ -1,0 +1,30 @@
+Index: pcap/bpf.h
+===================================================================
+--- pcap/bpf.h.orig
++++ pcap/bpf.h
+@@ -102,6 +102,25 @@ typedef	u_int bpf_u_int32;
+ #define BPF_WORDALIGN(x) (((x)+(BPF_ALIGNMENT-1))&~(BPF_ALIGNMENT-1))
+ 
+ /*
++ * Struct returned by BIOCGSTATS.
++ */
++struct bpf_stat {
++	u_int bs_recv;		/* number of packets received */
++	u_int bs_drop;		/* number of packets dropped */
++};
++
++/*
++ * Structure prepended to each packet.
++ */
++struct bpf_hdr {
++	struct timeval	bh_tstamp;	/* time stamp */
++	bpf_u_int32	bh_caplen;	/* length of captured portion */
++	bpf_u_int32	bh_datalen;	/* original length of packet */
++	u_short		bh_hdrlen;	/* length of bpf header (this struct
++					   plus alignment padding) */
++};
++
++/*
+  * Structure for "pcap_compile()", "pcap_setfilter()", etc..
+  */
+ struct bpf_program {
