@@ -5,7 +5,7 @@ License:        BSD-3-Clause
 Summary:        A Library for Network Sniffers
 Url:            http://www.tcpdump.org/
 Group:          System/Libraries
-Source:         %{name}-%{version}.tar.bz2
+Source:         %{name}-%{version}.tar.gz
 Source2:        baselibs.conf
 BuildRequires:  automake
 BuildRequires:  bison
