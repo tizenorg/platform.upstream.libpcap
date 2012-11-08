@@ -1,3 +1,4 @@
+%define keepstatic 1
 Name:           libpcap
 Version:        1.3.0
 Release:        0
