@@ -8,6 +8,7 @@ Url:            http://www.tcpdump.org/
 Group:          System/Libraries
 Source:         %{name}-%{version}.tar.gz
 Source2:        baselibs.conf
+Source1001: 	libpcap.manifest
 BuildRequires:  automake
 BuildRequires:  bison
 BuildRequires:  flex
@@ -32,6 +33,7 @@ program yourself.
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 %build
 pic="pic"
@@ -51,11 +53,13 @@ make %{?_smp_mflags} all shared
 %postun -p /sbin/ldconfig
 
 %files
+%manifest %{name}.manifest
 %defattr(-, root, root)
 %doc LICENSE
 %{_libdir}/*.so.*
 
 %files devel
+%manifest %{name}.manifest
 %defattr(-, root, root)
 %{_includedir}/*
 %{_bindir}/pcap-config
