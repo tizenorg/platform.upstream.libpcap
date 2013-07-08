@@ -1,0 +1,8 @@
+Change-Id: Ib6bd8652859189c9d4eba710871cd700b0dd98de
+Code-Review+2: Ryan Ware <ware@linux.intel.com>
+Verified+1: Ryan Ware <ware@linux.intel.com>
+Submitted-by: Ryan Ware <ware@linux.intel.com>
+Submitted-at: Mon, 08 Jul 2013 09:37:47 -0700
+Reviewed-on: https://review.tizen.org/gerrit/5167
+Project: platform/upstream/libpcap
+Branch: refs/heads/tizen
