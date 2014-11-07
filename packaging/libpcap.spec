@@ -1,6 +1,6 @@
 %define keepstatic 1
 Name:           libpcap
-Version:        1.3.0
+Version:        1.6.1
 Release:        0
 License:        BSD-3-Clause
 Summary:        A Library for Network Sniffers
